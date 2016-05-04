@@ -1,5 +1,6 @@
 package it.polito.tdp.sudoku.model;
 
+import java.util.*;
 import java.util.Random;
 
 public class SudokuGenerator {
@@ -10,6 +11,7 @@ public class SudokuGenerator {
 	public static final int BOARD_WIDTH = 9;
 	public static final int BOARD_HEIGHT = 9;
 	int[][] board;
+	List<String> statiche = new LinkedList<>();
 	
 	/**
 	 * Constructor. Resets board to zeros
@@ -31,6 +33,13 @@ public class SudokuGenerator {
 		makeHoles(difficulty);
 		return board;
 
+	}
+	
+	public int[][] stampaSoluzione(){
+		scan();
+		cerca(0,0,0);
+		Stampa();
+		return board;
 	}
 
 	/**
@@ -78,6 +87,96 @@ public class SudokuGenerator {
 		}
 		board[x][y] = 0;
 		return false;
+	}
+	
+	public void Stampa(){
+		String s="";
+		for(int i=0; i<9;i++){
+			for(int j=0; j<9; j++){
+				s+=board[i][j]+" ";
+			}
+			s+="\n";
+		}
+		System.out.println(s);
+	}
+	
+	public void scan(){
+		for(int i=0; i<9; i++){
+			for(int j=0; j<9; j++){
+				if(board[i][j]!=0)
+					statiche.add(i+""+j);
+			}
+		}
+	}
+	
+	public boolean check(int riga, int col){
+		String s =riga+""+col;
+		if(statiche.contains(s))
+			return true;
+		else
+			return false;
+	}
+	
+	public int numcelleOccupate(){
+		int cont=0;
+		for(int i=0; i<9; i++){
+			for(int j=0; j<9; j++){
+				if(board[i][j]!=0)
+					cont++;
+			}
+		}
+		return cont;
+	}
+	
+	public void cerca(int riga, int colonna, int tabu){
+		if(numcelleOccupate()==81){
+			return;
+		}
+		if(check(riga,colonna)==false){
+			if(tabu>0)
+				board[riga][colonna]=0;
+			for(int i=tabu+1; i<=9; i++){
+				if(legalMove(riga, colonna, i)==true){
+					board[riga][colonna] = i;
+					if(colonna==BOARD_WIDTH-1 && riga+1<=BOARD_HEIGHT-1){
+						cerca(riga+1, 0, 0);
+						break;
+					}
+					else if(colonna+1<9){
+						cerca(riga, colonna+1, 0);
+						break;
+					}
+				}	
+			}
+			if(board[riga][colonna]==0 || board[riga][colonna]==tabu){
+				if(colonna!=0){
+					int t = board[riga][colonna-1];
+					cerca(riga, colonna-1, t);
+				}else if(riga>0){
+					int t = board[riga-1][BOARD_WIDTH-1];
+					cerca(riga-1, BOARD_WIDTH-1, t);
+				}
+			}
+		}else{
+			if(tabu==0){
+				if(colonna==BOARD_WIDTH-1 && riga+1<=BOARD_HEIGHT-1){
+					cerca(riga+1, 0, 0);
+				}
+				else if(colonna+1<9){
+					cerca(riga, colonna+1, 0);
+				}
+			}else{
+				if(colonna!=0){
+					int t = board[riga][colonna-1];
+					cerca(riga, colonna-1, t);
+				}else if(riga>0){
+					int t = board[riga-1][BOARD_WIDTH-1];
+					cerca(riga-1, BOARD_WIDTH-1, t);
+				}
+			}
+		}
+		
+		
 	}
 
 	/**

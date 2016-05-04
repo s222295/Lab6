@@ -16,6 +16,8 @@ public class SudokuController {
 	final static int levelAdvanced = 50;
 	final static int levelExpert = 55;
 	
+	SudokuGenerator model;
+	
     @FXML
     private ResourceBundle resources;
 
@@ -267,18 +269,23 @@ public class SudokuController {
     
     List<Label> labelList = new ArrayList<Label>(); 
     
+    public void setModel(SudokuGenerator model) {
+		// TODO Auto-generated method stub
+		this.model=model;
+	}
+    
     @FXML
     void doGenerate(ActionEvent event){
     	// Per generare un nuova nuova griglia di Sudoku
-		SudokuGenerator sg = new SudokuGenerator();
-		int [][] matrix = sg.nextBoard(levelExpert);
+		int [][] matrix = model.nextBoard(levelExpert);
 		
 		printMatrixOnScreen(matrix);
     }
     
     @FXML
     void doSolve(ActionEvent event){
-    	
+    	printMatrixOnScreen(model.stampaSoluzione());
+
     }
     
     @FXML
@@ -448,6 +455,7 @@ public class SudokuController {
         labelList.add(lbl81);
     }
     
+   
     
     void printMatrixOnScreen(int[][] matrix) {
     	int counter = 0;
@@ -459,5 +467,7 @@ public class SudokuController {
     					counter++;
     				}
     }
+
+	
     
 }
