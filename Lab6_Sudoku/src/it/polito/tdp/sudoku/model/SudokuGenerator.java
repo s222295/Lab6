@@ -140,11 +140,11 @@ public class SudokuGenerator {
 					board[riga][colonna] = i;
 					if(colonna==BOARD_WIDTH-1 && riga+1<=BOARD_HEIGHT-1){
 						cerca(riga+1, 0, 0);
-						break;
+						return;
 					}
 					else if(colonna+1<9){
 						cerca(riga, colonna+1, 0);
-						break;
+						return;
 					}
 				}	
 			}
@@ -175,7 +175,7 @@ public class SudokuGenerator {
 				}
 			}
 		}
-		
+		return;
 		
 	}
 

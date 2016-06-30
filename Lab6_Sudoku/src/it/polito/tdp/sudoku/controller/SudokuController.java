@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 import it.polito.tdp.sudoku.model.SudokuGenerator;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 
 public class SudokuController {
@@ -20,6 +21,10 @@ public class SudokuController {
 	
     @FXML
     private ResourceBundle resources;
+    
+
+    @FXML
+    private ChoiceBox<String> boxDifficolta;
 
     @FXML
     private URL location;
@@ -276,10 +281,18 @@ public class SudokuController {
     
     @FXML
     void doGenerate(ActionEvent event){
+    	if(boxDifficolta.getValue()!=null){
+    	int [][] matrix;
     	// Per generare un nuova nuova griglia di Sudoku
-		int [][] matrix = model.nextBoard(levelExpert);
+    	if(boxDifficolta.getValue().compareTo("Esperto")==0)
+    		matrix = model.nextBoard(levelExpert);
+    	else if(boxDifficolta.getValue().compareTo("Avanzato")==0)
+    		matrix = model.nextBoard(levelAdvanced);
+    	else
+    		matrix = model.nextBoard(levelEasy);
 		
 		printMatrixOnScreen(matrix);
+    	}
     }
     
     @FXML
@@ -290,6 +303,7 @@ public class SudokuController {
     
     @FXML
     void initialize() {
+    	 assert boxDifficolta != null : "fx:id=\"boxDifficolta\" was not injected: check your FXML file 'Sudoku.fxml'.";
         assert lbl10 != null : "fx:id=\"lbl10\" was not injected: check your FXML file 'Sudoku.fxml'.";
         assert lbl11 != null : "fx:id=\"lbl11\" was not injected: check your FXML file 'Sudoku.fxml'.";
         assert lbl12 != null : "fx:id=\"lbl12\" was not injected: check your FXML file 'Sudoku.fxml'.";
@@ -371,6 +385,8 @@ public class SudokuController {
         assert lbl79 != null : "fx:id=\"lbl79\" was not injected: check your FXML file 'Sudoku.fxml'.";
         assert lbl80 != null : "fx:id=\"lbl80\" was not injected: check your FXML file 'Sudoku.fxml'.";
         assert lbl81 != null : "fx:id=\"lbl81\" was not injected: check your FXML file 'Sudoku.fxml'.";
+        
+        boxDifficolta.getItems().addAll("Esperto","Avanzato","Facile");
         
         labelList.add(lbl1);
         labelList.add(lbl2);
